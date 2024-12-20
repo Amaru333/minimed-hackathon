@@ -30,6 +30,7 @@ export function Login() {
       localStorage.setItem("token", response.data.token);
       router.push("/dashboard");
     } catch (error) {
+      console.log(error);
       if (axios.isAxiosError(error) && error.response) {
         setError(error.response.data.message || "An error occurred during login.");
       } else {
