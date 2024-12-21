@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-// import Image from 'next/image'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -11,7 +10,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { User, Book, GraduationCap, Settings, Clock, Trophy, CheckCircle } from "lucide-react";
+import { User, Book, GraduationCap, Settings, Trophy, CheckCircle } from "lucide-react";
+import { UserCard } from "./UserCard";
 
 // Mock user data
 const userData = {
@@ -47,9 +47,12 @@ const userData = {
       icon: "🔥",
     },
   ],
+  averageQuizScore: 92,
+  certifications: ["ACLS", "PALS", "BLS"],
+  userScore: 8.5,
 };
 
-export default function Profile() {
+export default function ProfilePage() {
   const [name, setName] = useState(userData.name);
   const [email, setEmail] = useState(userData.email);
   const [specialty, setSpecialty] = useState(userData.specialty);
@@ -74,182 +77,151 @@ export default function Profile() {
         </div>
       </div>
 
-      <Tabs defaultValue="summary" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="summary" className="gap-2">
-            <User className="h-4 w-4" />
-            Summary
-          </TabsTrigger>
-          <TabsTrigger value="courses" className="gap-2">
-            <Book className="h-4 w-4" />
-            Courses
-          </TabsTrigger>
-          <TabsTrigger value="achievements" className="gap-2">
-            <Trophy className="h-4 w-4" />
-            Achievements
-          </TabsTrigger>
-          <TabsTrigger value="settings" className="gap-2">
-            <Settings className="h-4 w-4" />
-            Settings
-          </TabsTrigger>
-        </TabsList>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="md:col-span-2 lg:col-span-1">
+          <UserCard
+            name={userData.name}
+            specialty={userData.specialty}
+            coursesCompleted={userData.stats.coursesCompleted}
+            averageQuizScore={userData.averageQuizScore}
+            certifications={userData.certifications}
+            achievements={userData.achievements.map((a) => a.name)}
+            userScore={userData.userScore}
+          />
+        </div>
 
-        <TabsContent value="summary">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Courses Completed</CardTitle>
-                <GraduationCap className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{userData.stats.coursesCompleted}</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Hours Learned</CardTitle>
-                <Clock className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{userData.stats.hoursLearned}</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Certificates Earned</CardTitle>
-                <GraduationCap className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{userData.stats.certificatesEarned}</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Quizzes Passed</CardTitle>
-                <CheckCircle className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{userData.stats.quizzesPassed}</div>
-              </CardContent>
-            </Card>
-          </div>
+        <div className="md:col-span-2">
+          <Tabs defaultValue="summary" className="space-y-4">
+            <TabsList>
+              <TabsTrigger value="summary" className="gap-2">
+                <User className="h-4 w-4" />
+                Summary
+              </TabsTrigger>
+              <TabsTrigger value="courses" className="gap-2">
+                <Book className="h-4 w-4" />
+                Courses
+              </TabsTrigger>
+              <TabsTrigger value="achievements" className="gap-2">
+                <Trophy className="h-4 w-4" />
+                Achievements
+              </TabsTrigger>
+              <TabsTrigger value="settings" className="gap-2">
+                <Settings className="h-4 w-4" />
+                Settings
+              </TabsTrigger>
+            </TabsList>
 
-          <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            <Card className="col-span-4">
-              <CardHeader>
-                <CardTitle>Recent Activity</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {userData.recentActivity.map((activity, index) => (
-                  <div key={index} className="flex items-center mt-4 first:mt-0">
-                    {activity.type === "course" && <Book className="h-4 w-4 mr-2 text-blue-500" />}
-                    {activity.type === "quiz" && (
-                      <CheckCircle className="h-4 w-4 mr-2 text-green-500" />
-                    )}
-                    {activity.type === "certificate" && (
-                      <GraduationCap className="h-4 w-4 mr-2 text-yellow-500" />
-                    )}
-                    <div className="ml-2 space-y-1">
-                      <p className="text-sm font-medium leading-none">{activity.name}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {new Date(activity.date).toLocaleDateString()}
-                      </p>
+            <TabsContent value="summary">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Recent Activity</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {userData.recentActivity.map((activity, index) => (
+                    <div key={index} className="flex items-center mt-4 first:mt-0">
+                      {activity.type === "course" && (
+                        <Book className="h-4 w-4 mr-2 text-blue-500" />
+                      )}
+                      {activity.type === "quiz" && (
+                        <CheckCircle className="h-4 w-4 mr-2 text-green-500" />
+                      )}
+                      {activity.type === "certificate" && (
+                        <GraduationCap className="h-4 w-4 mr-2 text-yellow-500" />
+                      )}
+                      <div className="ml-2 space-y-1">
+                        <p className="text-sm font-medium leading-none">{activity.name}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {new Date(activity.date).toLocaleDateString()}
+                        </p>
+                      </div>
                     </div>
-                  </div>
+                  ))}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="courses">
+              <div className="space-y-4">
+                {userData.courses.map((course) => (
+                  <Card key={course.id}>
+                    <CardHeader>
+                      <CardTitle>{course.name}</CardTitle>
+                      <CardDescription>Progress: {course.progress}%</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <Progress value={course.progress} className="mb-2" />
+                      <div className="flex justify-between items-center">
+                        <Button variant="outline">Continue Course</Button>
+                        {course.certificateEarned && (
+                          <Badge variant="secondary" className="gap-1">
+                            <GraduationCap className="h-4 w-4" />
+                            Certificate Earned
+                          </Badge>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
                 ))}
-              </CardContent>
-            </Card>
-            <Card className="col-span-3">
-              <CardHeader>
-                <CardTitle>About Me</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">{userData.bio}</p>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
+              </div>
+            </TabsContent>
 
-        <TabsContent value="courses">
-          <div className="space-y-4">
-            {userData.courses.map((course) => (
-              <Card key={course.id}>
+            <TabsContent value="achievements">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {userData.achievements.map((achievement) => (
+                  <Card key={achievement.id}>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <span className="text-2xl">{achievement.icon}</span>
+                        {achievement.name}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-sm text-muted-foreground">{achievement.description}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="settings">
+              <Card>
                 <CardHeader>
-                  <CardTitle>{course.name}</CardTitle>
-                  <CardDescription>Progress: {course.progress}%</CardDescription>
+                  <CardTitle>Profile Settings</CardTitle>
+                  <CardDescription>Update your profile information</CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <Progress value={course.progress} className="mb-2" />
-                  <div className="flex justify-between items-center">
-                    <Button variant="outline">Continue Course</Button>
-                    {course.certificateEarned && (
-                      <Badge variant="secondary" className="gap-1">
-                        <GraduationCap className="h-4 w-4" />
-                        Certificate Earned
-                      </Badge>
-                    )}
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Name</Label>
+                    <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
                   </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="specialty">Specialty</Label>
+                    <Input
+                      id="specialty"
+                      value={specialty}
+                      onChange={(e) => setSpecialty(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="bio">Bio</Label>
+                    <Textarea id="bio" value={bio} onChange={(e) => setBio(e.target.value)} />
+                  </div>
+                  <Button>Save Changes</Button>
                 </CardContent>
               </Card>
-            ))}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="achievements">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {userData.achievements.map((achievement) => (
-              <Card key={achievement.id}>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <span className="text-2xl">{achievement.icon}</span>
-                    {achievement.name}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">{achievement.description}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="settings">
-          <Card>
-            <CardHeader>
-              <CardTitle>Profile Settings</CardTitle>
-              <CardDescription>Update your profile information</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Name</Label>
-                <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="specialty">Specialty</Label>
-                <Input
-                  id="specialty"
-                  value={specialty}
-                  onChange={(e) => setSpecialty(e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="bio">Bio</Label>
-                <Textarea id="bio" value={bio} onChange={(e) => setBio(e.target.value)} />
-              </div>
-              <Button>Save Changes</Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </div>
     </div>
   );
 }
