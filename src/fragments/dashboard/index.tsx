@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Calendar, BookOpen, Award, Flame, ArrowRight } from "lucide-react";
 import Image from "next/image";
 
-// This would typically come from an API call
 const userData = {
   name: "Dr. Jane Smith",
   currentModule: {
@@ -32,7 +31,6 @@ export default function Dashboard() {
       <h1 className="text-3xl font-bold mb-6">Welcome back, {userData.name}!</h1>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {/* Continue Learning Card */}
         <Card className="col-span-2">
           <CardHeader>
             <CardTitle>Continue Learning</CardTitle>
@@ -61,7 +59,6 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        {/* Daily Streak Card */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center">
@@ -110,7 +107,6 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        {/* Calendar Card */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center">
