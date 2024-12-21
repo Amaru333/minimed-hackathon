@@ -1,4 +1,4 @@
-import { Navbar } from "@/components/common/Navbar";
+import { AuthNavbar } from "@/components/common/AuthNavbar";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -13,7 +13,7 @@ export default function AuthRootLayout({
 }>) {
   return (
     <div>
-      <Navbar />
+      <AuthNavbar />
       {children}
     </div>
   );
