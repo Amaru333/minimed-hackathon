@@ -23,5 +23,8 @@ export async function POST(request: Request) {
 
   const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, { expiresIn: "1h" });
 
-  return NextResponse.json({ token });
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { password: _, ...userWithoutPassword } = user.toObject();
+
+  return NextResponse.json({ token, user: userWithoutPassword });
 }

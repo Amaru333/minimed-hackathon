@@ -14,12 +14,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useDispatch } from "react-redux";
 
 export function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,6 +29,8 @@ export function Login() {
 
     try {
       const response = await axios.post("/api/login", { email, password });
+      console.log(response.data.user, "USER");
+      dispatch({ type: "user/setUser", payload: response.data.user });
       localStorage.setItem("token", response.data.token);
       router.push("/dashboard");
     } catch (error) {
