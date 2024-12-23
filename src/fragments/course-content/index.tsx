@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
-// import Link from "next/link"
-// import Image from "next/image"
+import { useState, useEffect } from "react";
+import axios from "axios";
 import {
   MoreVertical,
   Download,
@@ -22,213 +21,38 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { QuizComponent } from "./QuizComponent";
+import { Course } from "@/models/CourseModel";
 
-// This would come from your API
-const courseData = {
-  id: "acls-123",
-  title: "Advanced Cardiac Life Support (ACLS)",
-  instructor: "Dr. Sarah Johnson",
-  type: "Pre-recorded",
-  skillLevel: "Intermediate",
-  duration: "5 Stages, 16 Hours",
-  critiqueSessions: "Once a Week",
-  currentStage: 3,
-  currentLesson: 2,
-  stages: [
-    {
-      id: 1,
-      title: "Basic Life Support Review",
-      completed: true,
-      lessons: [
-        { id: 1, title: "CPR Techniques", duration: "15:56", completed: true, current: false },
-        { id: 2, title: "AED Usage", duration: "28:34", completed: true, current: false },
-      ],
-      quiz: {
-        id: "quiz-1",
-        title: "Basic Life Support Quiz",
-        questions: [
-          {
-            id: 1,
-            text: "What is the correct compression to ventilation ratio for adult CPR?",
-            options: ["15:2", "30:2", "20:2", "10:2"],
-            correctAnswer: 1,
-          },
-          {
-            id: 2,
-            text: "What is the correct compression to ventilation ratio for adult CPR?",
-            options: ["15:2", "30:2", "20:2", "10:2"],
-            correctAnswer: 1,
-          },
-          {
-            id: 3,
-            text: "What is the correct compression to ventilation ratio for adult CPR?",
-            options: ["15:2", "30:2", "20:2", "10:2"],
-            correctAnswer: 1,
-          },
-          {
-            id: 4,
-            text: "What is the correct compression to ventilation ratio for adult CPR?",
-            options: ["15:2", "30:2", "20:2", "10:2"],
-            correctAnswer: 1,
-          },
-          {
-            id: 5,
-            text: "What is the correct compression to ventilation ratio for adult CPR?",
-            options: ["15:2", "30:2", "20:2", "10:2"],
-            correctAnswer: 1,
-          },
-          {
-            id: 6,
-            text: "What is the correct compression to ventilation ratio for adult CPR?",
-            options: ["15:2", "30:2", "20:2", "10:2"],
-            correctAnswer: 1,
-          },
-          {
-            id: 7,
-            text: "What is the correct compression to ventilation ratio for adult CPR?",
-            options: ["15:2", "30:2", "20:2", "10:2"],
-            correctAnswer: 1,
-          },
-          {
-            id: 8,
-            text: "What is the correct compression to ventilation ratio for adult CPR?",
-            options: ["15:2", "30:2", "20:2", "10:2"],
-            correctAnswer: 1,
-          },
-          {
-            id: 9,
-            text: "What is the correct compression to ventilation ratio for adult CPR?",
-            options: ["15:2", "30:2", "20:2", "10:2"],
-            correctAnswer: 1,
-          },
-          {
-            id: 10,
-            text: "What is the correct compression to ventilation ratio for adult CPR?",
-            options: ["15:2", "30:2", "20:2", "10:2"],
-            correctAnswer: 1,
-          },
-          // Add more questions...
-        ],
-      },
-    },
-    {
-      id: 2,
-      title: "ECG Interpretation",
-      completed: true,
-      lessons: [
-        {
-          id: 3,
-          title: "Basic Rhythm Analysis",
-          duration: "41:23",
-          completed: true,
-          current: false,
-        },
-        { id: 4, title: "Common Arrhythmias", duration: "39:41", completed: true, current: false },
-      ],
-      quiz: {
-        id: "quiz-2",
-        title: "ECG Interpretation Quiz",
-        questions: [
-          // Add questions here
-        ],
-      },
-    },
-    {
-      id: 3,
-      title: "Emergency Medications",
-      completed: false,
-      progress: 26,
-      lessons: [
-        { id: 5, title: "ACLS Algorithms", duration: "28:34", completed: true, current: false },
-        {
-          id: 6,
-          title: "Medication Administration",
-          duration: "41:23",
-          current: true,
-          completed: false,
-        },
-        { id: 7, title: "Drug Calculations", duration: "39:41", completed: false, current: false },
-      ],
-      quiz: {
-        id: "quiz-3",
-        title: "Emergency Medications Quiz",
-        questions: [
-          // Add questions here
-        ],
-      },
-    },
-    {
-      id: 4,
-      title: "Case Scenarios",
-      completed: false,
-      lessons: [
-        { id: 8, title: "Cardiac Arrest", duration: "35:15", completed: false, current: false },
-        {
-          id: 9,
-          title: "Acute Coronary Syndrome",
-          duration: "42:18",
-          completed: false,
-          current: false,
-        },
-      ],
-      quiz: {
-        id: "quiz-4",
-        title: "Case Scenarios Quiz",
-        questions: [
-          // Add questions here
-        ],
-      },
-    },
-    {
-      id: 5,
-      title: "Final Assessment",
-      completed: false,
-      lessons: [
-        { id: 10, title: "Practice Test", duration: "45:00", completed: false, current: false },
-        {
-          id: 11,
-          title: "Certification Exam",
-          duration: "60:00",
-          completed: false,
-          current: false,
-        },
-      ],
-      quiz: {
-        id: "quiz-5",
-        title: "Final Assessment Quiz",
-        questions: [
-          // Add questions here
-        ],
-      },
-    },
-  ],
-};
+export default function CoursePage({ params }: { params: { courseId: string } }) {
+  const [courseData, setCourseData] = useState<Course | null>(null);
+  const [activeStage, setActiveStage] = useState<number | null>(null);
+  const [activeItem, setActiveItem] = useState<{
+    type: "lesson" | "quiz";
+    id: number | string;
+  } | null>(null);
 
-type QuizResults = {
-  score: number;
-  totalQuestions: number;
-  answers: number[];
-};
+  useEffect(() => {
+    const fetchCourseData = async () => {
+      try {
+        const response = await axios.get("/api/courses");
+        const course = response.data.courses.find((c: Course) => c.id === "acls-123");
+        if (course) {
+          setCourseData(course);
+          setActiveStage(course.currentStage);
+          setActiveItem({ type: "lesson", id: course.currentLesson });
+        }
+      } catch (error) {
+        console.error("Error fetching course data:", error);
+      }
+    };
 
-type Quiz = {
-  id: string;
-  title: string;
-  questions: {
-    id: number;
-    text: string;
-    options: string[];
-    correctAnswer: number;
-  }[];
-};
+    fetchCourseData();
+  }, [params.courseId]);
 
-export default function CoursePage() {
-  const [activeStage, setActiveStage] = useState(courseData.currentStage);
-  const [activeItem, setActiveItem] = useState<{ type: "lesson" | "quiz"; id: number | string }>({
-    type: "lesson",
-    id: courseData.currentLesson,
-  });
-  const [quizResults, setQuizResults] = useState<QuizResults | null>(null);
-  console.log(quizResults);
+  if (!courseData) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="flex h-[calc(100vh-4rem)]">
       {/* Left Sidebar */}
@@ -260,11 +84,10 @@ export default function CoursePage() {
                         onClick={() => {
                           setActiveStage(stage.id);
                           setActiveItem({ type: "lesson", id: lesson.id });
-                          setQuizResults(null);
                         }}
                         className={`flex items-center justify-between w-full p-2 text-left text-sm hover:bg-muted/50 rounded-lg ${
                           activeStage === stage.id &&
-                          activeItem.type === "lesson" &&
+                          activeItem?.type === "lesson" &&
                           activeItem.id === lesson.id
                             ? "bg-muted/50"
                             : ""
@@ -287,15 +110,14 @@ export default function CoursePage() {
                       onClick={() => {
                         setActiveStage(stage.id);
                         setActiveItem({ type: "quiz", id: stage.quiz.id });
-                        setQuizResults(null);
                       }}
                       className={`flex items-center justify-between w-full p-2 text-left text-sm hover:bg-muted/50 rounded-lg ${
-                        activeStage === stage.id && activeItem.type === "quiz" ? "bg-muted/50" : ""
+                        activeStage === stage.id && activeItem?.type === "quiz" ? "bg-muted/50" : ""
                       }`}
                     >
                       <div className="flex items-center gap-2">
                         <ClipboardCheck className="h-4 w-4 text-primary" />
-                        <span>{stage.quiz.title}</span>
+                        <span>Section Quiz</span>
                       </div>
                     </button>
                   </div>
@@ -308,7 +130,7 @@ export default function CoursePage() {
 
       {/* Main Content */}
       <div className="flex-1 overflow-auto">
-        {activeItem.type === "lesson" ? (
+        {activeItem?.type === "lesson" ? (
           <>
             <div className="aspect-video bg-black relative">
               <video className="w-full h-full" controls poster="/placeholder.svg">
@@ -386,10 +208,7 @@ export default function CoursePage() {
             </div>
           </>
         ) : (
-          <QuizComponent
-            quiz={courseData.stages.find((s) => s.id === activeStage)?.quiz as Quiz}
-            onComplete={(results) => setQuizResults(results)}
-          />
+          <QuizComponent quizId={activeItem?.id as string} courseId={params.courseId} />
         )}
       </div>
 

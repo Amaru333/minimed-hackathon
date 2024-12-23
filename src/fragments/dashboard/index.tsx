@@ -18,19 +18,8 @@ import {
   PlayCircle,
 } from "lucide-react";
 import Image from "next/image";
-
-// This would typically come from an API call
-const userData = {
-  name: "Dr. Jane Smith",
-  currentModule: {
-    title: "Advanced Cardiac Life Support",
-    progress: 65,
-    id: 10,
-  },
-  streakDays: 7,
-  completedCourses: 3,
-  totalAchievements: 12,
-};
+import { useSelector } from "react-redux";
+import { getUser } from "@/redux/slices/userSlice";
 
 const recentCourses = [
   {
@@ -73,6 +62,19 @@ const recommendedCourses = [
 ];
 
 export default function Dashboard() {
+  const userDetails = useSelector(getUser);
+  // This would typically come from an API call
+  const userData = {
+    name: userDetails.name,
+    currentModule: {
+      title: "Advanced Cardiac Life Support",
+      progress: 65,
+      id: 10,
+    },
+    streakDays: 7,
+    completedCourses: 3,
+    totalAchievements: 12,
+  };
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {

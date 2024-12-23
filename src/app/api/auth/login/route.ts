@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Invalid password" }, { status: 401 });
   }
 
-  const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, { expiresIn: "1h" });
+  const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, { expiresIn: "10d" });
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { password: _, ...userWithoutPassword } = user.toObject();

@@ -12,47 +12,50 @@ import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User, Book, GraduationCap, Settings, Trophy, CheckCircle } from "lucide-react";
 import { UserCard } from "./UserCard";
-
-// Mock user data
-const userData = {
-  name: "Dr. Jane Smith",
-  email: "jane.smith@example.com",
-  avatar: "/placeholder.svg",
-  specialty: "Emergency Medicine",
-  joinDate: "January 2022",
-  bio: "Passionate about improving emergency care through continuous learning and innovation.",
-  stats: {
-    coursesCompleted: 15,
-    hoursLearned: 120,
-    certificatesEarned: 8,
-    quizzesPassed: 42,
-  },
-  recentActivity: [
-    { type: "course", name: "Advanced Trauma Care", date: "2023-06-15" },
-    { type: "quiz", name: "ACLS Algorithms", date: "2023-06-10" },
-    { type: "certificate", name: "Emergency Pediatrics", date: "2023-05-28" },
-  ],
-  courses: [
-    { id: 1, name: "Advanced Cardiac Life Support", progress: 100, certificateEarned: true },
-    { id: 2, name: "Emergency Trauma Care", progress: 75, certificateEarned: false },
-    { id: 3, name: "Pediatric Emergency Assessment", progress: 50, certificateEarned: false },
-  ],
-  achievements: [
-    { id: 1, name: "Fast Learner", description: "Completed 5 courses in one month", icon: "🚀" },
-    { id: 2, name: "Quiz Master", description: "Scored 100% in 10 quizzes", icon: "🏆" },
-    {
-      id: 3,
-      name: "Consistent Learner",
-      description: "Logged in for 30 consecutive days",
-      icon: "🔥",
-    },
-  ],
-  averageQuizScore: 92,
-  certifications: ["ACLS", "PALS", "BLS"],
-  userScore: 8.5,
-};
+import { useSelector } from "react-redux";
+import { getUser } from "@/redux/slices/userSlice";
+import { getMonthAndYear } from "@/lib/functions";
 
 export default function ProfilePage() {
+  const userDetails = useSelector(getUser);
+  // Mock user data
+  const userData = {
+    name: userDetails.name,
+    email: userDetails.email,
+    avatar: "/placeholder.svg",
+    specialty: "Emergency Medicine",
+    joinDate: getMonthAndYear(userDetails.createdAt),
+    bio: "Passionate about improving emergency care through continuous learning and innovation.",
+    stats: {
+      coursesCompleted: 15,
+      hoursLearned: 120,
+      certificatesEarned: 8,
+      quizzesPassed: 42,
+    },
+    recentActivity: [
+      { type: "course", name: "Advanced Trauma Care", date: "2023-06-15" },
+      { type: "quiz", name: "ACLS Algorithms", date: "2023-06-10" },
+      { type: "certificate", name: "Emergency Pediatrics", date: "2023-05-28" },
+    ],
+    courses: [
+      { id: 1, name: "Advanced Cardiac Life Support", progress: 100, certificateEarned: true },
+      { id: 2, name: "Emergency Trauma Care", progress: 75, certificateEarned: false },
+      { id: 3, name: "Pediatric Emergency Assessment", progress: 50, certificateEarned: false },
+    ],
+    achievements: [
+      { id: 1, name: "Fast Learner", description: "Completed 5 courses in one month", icon: "🚀" },
+      { id: 2, name: "Quiz Master", description: "Scored 100% in 10 quizzes", icon: "🏆" },
+      {
+        id: 3,
+        name: "Consistent Learner",
+        description: "Logged in for 30 consecutive days",
+        icon: "🔥",
+      },
+    ],
+    averageQuizScore: 0,
+    certifications: ["ACLS", "PALS", "BLS"],
+    userScore: 0,
+  };
   const [name, setName] = useState(userData.name);
   const [email, setEmail] = useState(userData.email);
   const [specialty, setSpecialty] = useState(userData.specialty);
@@ -66,7 +69,7 @@ export default function ProfilePage() {
           <AvatarFallback>
             {userData.name
               .split(" ")
-              .map((n) => n[0])
+              .map((n: string[]) => n[0])
               .join("")}
           </AvatarFallback>
         </Avatar>

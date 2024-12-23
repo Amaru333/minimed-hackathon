@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import {
   Card,
   CardContent,
@@ -10,89 +11,66 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import {
-  PieChart,
-  Pie,
-  Cell,
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-} from "recharts";
-
-interface Question {
-  id: number;
-  text: string;
-  options: string[];
-  correctAnswer: number;
-}
-
-interface Quiz {
-  id: string;
-  title: string;
-  questions: Question[];
-}
-
-interface QuizResults {
-  score: number;
-  totalQuestions: number;
-  answers: number[];
-}
+import { Quiz } from "@/models/CourseModel";
 
 interface QuizComponentProps {
-  quiz: Quiz;
-  onComplete: (results: QuizResults) => void;
+  quizId: string;
+  courseId: string;
 }
 
-export function QuizComponent({ quiz, onComplete }: QuizComponentProps) {
-  const [currentQuestion, setCurrentQuestion] = useState(0);
+export function QuizComponent({ quizId, courseId }: QuizComponentProps) {
+  const [quiz, setQuiz] = useState<Quiz | null>(null);
   const [answers, setAnswers] = useState<number[]>([]);
   const [showResults, setShowResults] = useState(false);
 
-  const handleAnswer = (answer: number) => {
+  useEffect(() => {
+    const fetchQuizData = async () => {
+      try {
+        const response = await axios.get("/api/courses");
+        const course = response.data.courses.find((c: { id: string }) => c.id === "acls-123");
+        if (course) {
+          const quizData = course.stages.find(
+            (s: { quiz: { id: string } }) => s.quiz.id === quizId
+          )?.quiz;
+          if (quizData) {
+            setQuiz(quizData);
+            setAnswers(new Array(quizData.questions.length).fill(-1));
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching quiz data:", error);
+      }
+    };
+
+    fetchQuizData();
+  }, [quizId, courseId]);
+
+  const handleAnswer = (questionIndex: number, answerIndex: number) => {
     const newAnswers = [...answers];
-    newAnswers[currentQuestion] = answer;
+    newAnswers[questionIndex] = answerIndex;
     setAnswers(newAnswers);
   };
 
-  const handleNext = () => {
-    if (currentQuestion < quiz.questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
-    } else {
-      const score = calculateScore();
-      setShowResults(true);
-      onComplete({ score, totalQuestions: quiz.questions.length, answers });
-    }
+  const handleSubmit = () => {
+    setShowResults(true);
   };
 
   const calculateScore = () => {
     return answers.reduce((score, answer, index) => {
-      return answer === quiz.questions[index].correctAnswer ? score + 1 : score;
+      return answer === quiz?.questions[index].correctAnswer ? score + 1 : score;
     }, 0);
   };
+
+  if (!quiz) {
+    return <div>Loading quiz...</div>;
+  }
 
   if (showResults) {
     const score = calculateScore();
     const scorePercentage = (score / quiz.questions.length) * 100;
 
-    const resultData = [
-      { name: "Correct", value: score },
-      { name: "Incorrect", value: quiz.questions.length - score },
-    ];
-
-    const COLORS = ["#4CAF50", "#F44336"];
-
-    const questionAnalysis = quiz.questions.map((question, index) => ({
-      question: `Q${index + 1}`,
-      correct: answers[index] === question.correctAnswer ? 1 : 0,
-      incorrect: answers[index] !== question.correctAnswer ? 1 : 0,
-    }));
-
     return (
-      <div className="container max-w-4xl py-10">
+      <div className="container max-w-4xl py-10 mx-auto">
         <Card>
           <CardHeader>
             <CardTitle>Quiz Results</CardTitle>
@@ -100,44 +78,46 @@ export function QuizComponent({ quiz, onComplete }: QuizComponentProps) {
               You scored {score} out of {quiz.questions.length} ({scorePercentage.toFixed(2)}%)
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <Progress value={scorePercentage} className="w-full" />
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <h3 className="text-lg font-semibold mb-2">Overall Performance</h3>
-                <ResponsiveContainer width="100%" height={200}>
-                  <PieChart>
-                    <Pie
-                      data={resultData}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      outerRadius={80}
-                      fill="#8884d8"
-                      dataKey="value"
-                    >
-                      {resultData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                    </Pie>
-                  </PieChart>
-                </ResponsiveContainer>
+          <CardContent>
+            {quiz.questions.map((question, index) => (
+              <div key={question.id} className="mb-6">
+                <h3 className="font-semibold mb-2">
+                  Question {index + 1}: {question.text}
+                </h3>
+                <div className="pl-4">
+                  {question.options.map((option, optionIndex) => (
+                    <div key={optionIndex} className="flex items-center space-x-2 mb-1">
+                      <div
+                        className={`w-4 h-4 rounded-full ${
+                          optionIndex === answers[index] && optionIndex === question.correctAnswer
+                            ? "bg-green-500"
+                            : optionIndex === answers[index]
+                            ? "bg-red-500"
+                            : optionIndex === question.correctAnswer
+                            ? "bg-green-500"
+                            : "bg-gray-300"
+                        }`}
+                      ></div>
+                      <span
+                        className={optionIndex === question.correctAnswer ? "font-semibold" : ""}
+                      >
+                        {option}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                {answers[index] !== question.correctAnswer && (
+                  <p className="text-sm text-red-500 mt-2">
+                    Your answer was incorrect. The correct answer is:{" "}
+                    {question.options[question.correctAnswer]}
+                  </p>
+                )}
               </div>
-              <div>
-                <h3 className="text-lg font-semibold mb-2">Question Analysis</h3>
-                <ResponsiveContainer width="100%" height={200}>
-                  <BarChart data={questionAnalysis}>
-                    <XAxis dataKey="question" />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="correct" stackId="a" fill="#4CAF50" />
-                    <Bar dataKey="incorrect" stackId="a" fill="#F44336" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
+            ))}
           </CardContent>
+          <CardFooter>
+            <Button onClick={() => setShowResults(false)}>Retake Quiz</Button>
+          </CardFooter>
         </Card>
       </div>
     );
@@ -148,24 +128,31 @@ export function QuizComponent({ quiz, onComplete }: QuizComponentProps) {
       <Card>
         <CardHeader>
           <CardTitle>{quiz.title}</CardTitle>
-          <CardDescription>
-            Question {currentQuestion + 1} of {quiz.questions.length}
-          </CardDescription>
+          <CardDescription>Answer all questions and submit to see your results.</CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-lg mb-4">{quiz.questions[currentQuestion]?.text}</p>
-          <RadioGroup onValueChange={(value) => handleAnswer(parseInt(value))}>
-            {quiz.questions[currentQuestion]?.options.map((option, index) => (
-              <div key={index} className="flex items-center space-x-2">
-                <RadioGroupItem value={index.toString()} id={`option-${index}`} />
-                <Label htmlFor={`option-${index}`}>{option}</Label>
-              </div>
-            ))}
-          </RadioGroup>
+          {quiz.questions.map((question, index) => (
+            <div key={question.id} className="mb-6">
+              <h3 className="font-semibold mb-2">
+                Question {index + 1}: {question.text}
+              </h3>
+              <RadioGroup onValueChange={(value) => handleAnswer(index, parseInt(value))}>
+                {question.options.map((option, optionIndex) => (
+                  <div key={optionIndex} className="flex items-center space-x-2">
+                    <RadioGroupItem
+                      value={optionIndex.toString()}
+                      id={`q${question.id}-option${optionIndex}`}
+                    />
+                    <Label htmlFor={`q${question.id}-option${optionIndex}`}>{option}</Label>
+                  </div>
+                ))}
+              </RadioGroup>
+            </div>
+          ))}
         </CardContent>
         <CardFooter>
-          <Button onClick={handleNext} disabled={answers[currentQuestion] === undefined}>
-            {currentQuestion === quiz.questions.length - 1 ? "Finish" : "Next"}
+          <Button onClick={handleSubmit} disabled={answers.some((answer) => answer === -1)}>
+            Submit Quiz
           </Button>
         </CardFooter>
       </Card>

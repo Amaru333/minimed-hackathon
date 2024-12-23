@@ -27,7 +27,7 @@ export function Signup() {
     setError("");
 
     try {
-      const response = await axios.post("/api/signup", { name, email, password });
+      const response = await axios.post("/api/auth/signup", { name, email, password });
       localStorage.setItem("token", response.data.token);
       router.push("/dashboard");
     } catch (error) {

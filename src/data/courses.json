@@ -1,0 +1,190 @@
+{
+  "courses": [
+    {
+      "id": "acls-123",
+      "title": "Advanced Cardiac Life Support (ACLS)",
+      "instructor": "Dr. Sarah Johnson",
+      "type": "Pre-recorded",
+      "skillLevel": "Intermediate",
+      "duration": "5 Stages, 16 Hours",
+      "critiqueSessions": "Once a Week",
+      "currentStage": 3,
+      "currentLesson": 2,
+      "stages": [
+        {
+          "id": 1,
+          "title": "Basic Life Support Review",
+          "completed": true,
+          "lessons": [
+            { "id": 1, "title": "CPR Techniques", "duration": "15:56", "completed": true },
+            { "id": 2, "title": "AED Usage", "duration": "28:34", "completed": true }
+          ],
+          "quiz": {
+            "id": "quiz-1",
+            "title": "Basic Life Support Review Quiz",
+            "questions": [
+              {
+                "id": 1,
+                "text": "What is the correct compression to ventilation ratio for adult CPR?",
+                "options": ["15:2", "30:2", "20:2", "10:2"],
+                "correctAnswer": 1
+              },
+              {
+                "id": 2,
+                "text": "How deep should chest compressions be for an adult?",
+                "options": [
+                  "At least 1 inch",
+                  "At least 2 inches",
+                  "At least 3 inches",
+                  "At least 4 inches"
+                ],
+                "correctAnswer": 1
+              },
+              {
+                "id": 3,
+                "text": "What is the recommended compression rate for CPR?",
+                "options": [
+                  "60-80 per minute",
+                  "80-100 per minute",
+                  "100-120 per minute",
+                  "120-140 per minute"
+                ],
+                "correctAnswer": 2
+              }
+            ]
+          }
+        },
+        {
+          "id": 2,
+          "title": "ECG Interpretation",
+          "completed": true,
+          "lessons": [
+            { "id": 3, "title": "Basic Rhythm Analysis", "duration": "41:23", "completed": true },
+            { "id": 4, "title": "Common Arrhythmias", "duration": "39:41", "completed": true }
+          ],
+          "quiz": {
+            "id": "quiz-2",
+            "title": "ECG Interpretation Quiz",
+            "questions": [
+              {
+                "id": 1,
+                "text": "Which of the following is a normal sinus rhythm characteristic?",
+                "options": [
+                  "Irregular R-R intervals",
+                  "Absent P waves",
+                  "P wave before each QRS complex",
+                  "Wide QRS complexes"
+                ],
+                "correctAnswer": 2
+              },
+              {
+                "id": 2,
+                "text": "What does a wide QRS complex typically indicate?",
+                "options": [
+                  "Atrial fibrillation",
+                  "Ventricular origin of the beat",
+                  "Normal conduction",
+                  "Sinus bradycardia"
+                ],
+                "correctAnswer": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": 3,
+          "title": "Emergency Medications",
+          "completed": false,
+          "progress": 26,
+          "lessons": [
+            { "id": 5, "title": "ACLS Algorithms", "duration": "28:34", "completed": true },
+            { "id": 6, "title": "Medication Administration", "duration": "41:23", "current": true },
+            { "id": 7, "title": "Drug Calculations", "duration": "39:41", "completed": false }
+          ],
+          "quiz": {
+            "id": "quiz-3",
+            "title": "Emergency Medications Quiz",
+            "questions": [
+              {
+                "id": 1,
+                "text": "What is the primary use of epinephrine in cardiac arrest?",
+                "options": [
+                  "Increase heart rate",
+                  "Vasoconstriction",
+                  "Bronchodilation",
+                  "All of the above"
+                ],
+                "correctAnswer": 3
+              },
+              {
+                "id": 2,
+                "text": "Which medication is used as the first-line treatment for ventricular fibrillation?",
+                "options": ["Atropine", "Amiodarone", "Lidocaine", "Epinephrine"],
+                "correctAnswer": 3
+              }
+            ]
+          }
+        },
+        {
+          "id": 4,
+          "title": "Case Scenarios",
+          "completed": false,
+          "lessons": [
+            { "id": 8, "title": "Cardiac Arrest", "duration": "35:15", "completed": false },
+            { "id": 9, "title": "Acute Coronary Syndrome", "duration": "42:18", "completed": false }
+          ],
+          "quiz": {
+            "id": "quiz-4",
+            "title": "Case Scenarios Quiz",
+            "questions": [
+              {
+                "id": 1,
+                "text": "In a case of witnessed sudden collapse, what is the first step in the Chain of Survival?",
+                "options": ["Start CPR", "Call for help", "Use an AED", "Give rescue breaths"],
+                "correctAnswer": 1
+              },
+              {
+                "id": 2,
+                "text": "What is the most appropriate initial management for a patient presenting with chest pain and ST-segment elevation on ECG?",
+                "options": [
+                  "Aspirin and nitroglycerin",
+                  "Immediate PCI",
+                  "Thrombolytic therapy",
+                  "Beta-blockers"
+                ],
+                "correctAnswer": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": 5,
+          "title": "Final Assessment",
+          "completed": false,
+          "lessons": [
+            { "id": 10, "title": "Practice Test", "duration": "45:00", "completed": false },
+            { "id": 11, "title": "Certification Exam", "duration": "60:00", "completed": false }
+          ],
+          "quiz": {
+            "id": "quiz-5",
+            "title": "Final Assessment Quiz",
+            "questions": [
+              {
+                "id": 1,
+                "text": "What is the correct sequence for the pediatric BLS algorithm?",
+                "options": ["C-A-B", "A-B-C", "B-C-A", "D-C-A-B"],
+                "correctAnswer": 0
+              },
+              {
+                "id": 2,
+                "text": "Which of the following is a reversible cause of cardiac arrest?",
+                "options": ["Hypovolemia", "Hypoxia", "Hypothermia", "All of the above"],
+                "correctAnswer": 3
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
