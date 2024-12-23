@@ -32,5 +32,5 @@ export async function middleware(request: NextRequest) {
 
 // Apply middleware only to protected routes
 export const config = {
-  matcher: ["/api/protected/:path*"], // Match routes starting with /api/protected/
+  matcher: ["/api/courses/:path*"], // Match routes starting with /api/protected/
 };

@@ -9,6 +9,14 @@ const CourseSchema = new mongoose.Schema(
       type: String,
       required: [true, "Please provide a title"],
     },
+    description: {
+      type: String,
+      required: [true, "Please provide a description"],
+    },
+    image: {
+      type: String,
+      required: [true, "Please provide an image"],
+    },
     instructor: {
       type: mongoose.Schema.Types.ObjectId,
       ref: Instructor,
@@ -21,6 +29,20 @@ const CourseSchema = new mongoose.Schema(
     skillLevel: {
       type: String,
       required: [true, "Please provide a skill level"],
+      enum: ["Beginner", "Intermediate", "Advanced"],
+    },
+    enrolled: {
+      type: Number,
+      default: 0,
+    },
+    rating: {
+      type: Number,
+      default: 0,
+    },
+    category: {
+      type: String,
+      required: [true, "Please provide a category"],
+      enum: ["Emergency", "Pediatrics", "Neurology", "Cardiology"],
     },
     duration: {
       type: String,
@@ -30,6 +52,18 @@ const CourseSchema = new mongoose.Schema(
       type: String,
       required: [true, "Please provide a critique session"],
     },
+    topics: [
+      {
+        type: String,
+        required: [true, "Please provide a topic"],
+      },
+    ],
+    features: [
+      {
+        type: String,
+        required: [true, "Please provide a topic"],
+      },
+    ],
     stages: [
       {
         type: mongoose.Schema.Types.ObjectId,

@@ -1,8 +1,9 @@
-import React from "react";
+import React, { use } from "react";
 import CourseContent from "@/fragments/course-content";
 
-function CourseContentPage({ params }: { params: { courseId: string } }) {
-  return <CourseContent params={params} />;
+function CourseContentPage({ params }: { params: Promise<{ courseId: string }> }) {
+  const { courseId } = use(params);
+  return <CourseContent params={{ courseId }} />;
 }
 
 export default CourseContentPage;

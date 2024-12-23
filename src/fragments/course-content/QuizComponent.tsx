@@ -26,7 +26,7 @@ export function QuizComponent({ quizId, courseId }: QuizComponentProps) {
   useEffect(() => {
     const fetchQuizData = async () => {
       try {
-        const response = await axios.get("/api/courses");
+        const response = await axios.get("/api/courses/random");
         const course = response.data.courses.find((c: { id: string }) => c.id === "acls-123");
         if (course) {
           const quizData = course.stages.find(

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
@@ -15,81 +15,97 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Search,
-  Clock,
-  Users,
-  BarChart,
-  Star,
-  GraduationCap,
-  BookOpen,
-  Stethoscope,
-  Syringe,
-  Heart,
-  Brain,
-} from "lucide-react";
+import { Search, Clock, Users, BarChart, Star, GraduationCap, BookOpen } from "lucide-react";
+import { getCourses } from "@/services/courseService";
+
+interface Course {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  duration: string;
+  level: string;
+  enrolled: number;
+  rating: number;
+  instructor: string;
+  category: string;
+}
 
 // Mock data for courses
-const courses = [
-  {
-    id: 1,
-    title: "Advanced Cardiac Life Support (ACLS)",
-    description: "Master the skills needed for advanced cardiac life support scenarios.",
-    image: "/extras/course-placeholder.png",
-    duration: "16 hours",
-    level: "Advanced",
-    enrolled: 1234,
-    rating: 4.8,
-    instructor: "Dr. Sarah Johnson",
-    category: "Emergency",
-    icon: Heart,
-  },
-  {
-    id: 2,
-    title: "Pediatric Emergency Assessment",
-    description: "Learn to quickly and accurately assess pediatric emergencies.",
-    image: "/extras/course-placeholder.png",
-    duration: "12 hours",
-    level: "Intermediate",
-    enrolled: 987,
-    rating: 4.7,
-    instructor: "Dr. Michael Chen",
-    category: "Pediatrics",
-    icon: Stethoscope,
-  },
-  {
-    id: 3,
-    title: "Emergency Trauma Care",
-    description: "Develop skills to manage trauma cases in emergency settings.",
-    image: "/extras/course-placeholder.png",
-    duration: "20 hours",
-    level: "Advanced",
-    enrolled: 1567,
-    rating: 4.9,
-    instructor: "Dr. Emily Rodriguez",
-    category: "Emergency",
-    icon: Syringe,
-  },
-  {
-    id: 4,
-    title: "Neurology Essentials for Emergency Medicine",
-    description: "Understand key neurological concepts crucial for emergency care.",
-    image: "/extras/course-placeholder.png",
-    duration: "14 hours",
-    level: "Intermediate",
-    enrolled: 876,
-    rating: 4.6,
-    instructor: "Dr. David Lee",
-    category: "Neurology",
-    icon: Brain,
-  },
-  // Add more courses as needed
-];
+// const courses = [
+//   {
+//     id: 1,
+//     title: "Advanced Cardiac Life Support (ACLS)",
+//     description: "Master the skills needed for advanced cardiac life support scenarios.",
+//     image: "/extras/course-placeholder.png",
+//     duration: "16 hours",
+//     level: "Advanced",
+//     enrolled: 1234,
+//     rating: 4.8,
+//     instructor: "Dr. Sarah Johnson",
+//     category: "Emergency",
+//   },
+//   {
+//     id: 2,
+//     title: "Pediatric Emergency Assessment",
+//     description: "Learn to quickly and accurately assess pediatric emergencies.",
+//     image: "/extras/course-placeholder.png",
+//     duration: "12 hours",
+//     level: "Intermediate",
+//     enrolled: 987,
+//     rating: 4.7,
+//     instructor: "Dr. Michael Chen",
+//     category: "Pediatrics",
+//   },
+//   {
+//     id: 3,
+//     title: "Emergency Trauma Care",
+//     description: "Develop skills to manage trauma cases in emergency settings.",
+//     image: "/extras/course-placeholder.png",
+//     duration: "20 hours",
+//     level: "Advanced",
+//     enrolled: 1567,
+//     rating: 4.9,
+//     instructor: "Dr. Emily Rodriguez",
+//     category: "Emergency",
+//   },
+//   {
+//     id: 4,
+//     title: "Neurology Essentials for Emergency Medicine",
+//     description: "Understand key neurological concepts crucial for emergency care.",
+//     image: "/extras/course-placeholder.png",
+//     duration: "14 hours",
+//     level: "Intermediate",
+//     enrolled: 876,
+//     rating: 4.6,
+//     instructor: "Dr. David Lee",
+//     category: "Neurology",
+//   },
+//   // Add more courses as needed
+// ];
 
 const categories = ["All", "Emergency", "Pediatrics", "Neurology", "Cardiology"];
 const levels = ["All Levels", "Beginner", "Intermediate", "Advanced"];
 
 export default function Courses() {
+  const [courses, setCourses] = useState<Course[]>([]);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const data = await getCourses(); // Fetch courses from API
+        setCourses(data);
+      } catch {
+        // setError(err.message || "Failed to fetch courses.");
+      }
+      //  finally {
+      //   setLoading(false);
+      // }
+    };
+
+    fetchCourses();
+  }, []);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedLevel, setSelectedLevel] = useState("All Levels");
@@ -171,13 +187,12 @@ export default function Courses() {
                     </Badge>
                   </div>
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <course.icon className="h-5 w-5 text-primary" />
-                      {course.title}
-                    </CardTitle>
+                    <CardTitle className="flex items-center gap-2">{course.title}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-muted-foreground mb-4">{course.description}</p>
+                    <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                      {course.description}
+                    </p>
                     <div className="flex items-center gap-4 text-sm">
                       <span className="flex items-center gap-1">
                         <Clock className="h-4 w-4" />
@@ -218,10 +233,11 @@ export default function Courses() {
                       <div className="flex justify-between items-start">
                         <div>
                           <h3 className="text-xl font-semibold mb-2 flex items-center gap-2">
-                            <course.icon className="h-5 w-5 text-primary" />
                             {course.title}
                           </h3>
-                          <p className="text-sm text-muted-foreground mb-4">{course.description}</p>
+                          <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                            {course.description}
+                          </p>
                         </div>
                         <Badge variant="secondary">{course.category}</Badge>
                       </div>

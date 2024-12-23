@@ -34,7 +34,7 @@ export default function CoursePage({ params }: { params: { courseId: string } })
   useEffect(() => {
     const fetchCourseData = async () => {
       try {
-        const response = await axios.get("/api/courses");
+        const response = await axios.get("/api/courses/random");
         const course = response.data.courses.find((c: Course) => c.id === "acls-123");
         if (course) {
           setCourseData(course);
