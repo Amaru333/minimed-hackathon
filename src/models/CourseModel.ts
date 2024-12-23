@@ -1,4 +1,5 @@
 export interface Lesson {
+  _id: string;
   id: number;
   title: string;
   duration: string;
@@ -20,6 +21,7 @@ export interface Quiz {
 }
 
 export interface Stage {
+  _id: string;
   id: number;
   title: string;
   completed: boolean;

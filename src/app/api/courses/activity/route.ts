@@ -1,21 +1,24 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb"; // MongoDB connection
-import Enrollment from "@/models/Enrollment";
+import CourseActivity from "@/models/CourseActivity";
 
-export async function POST(req: NextRequest, context: any) {
+export async function POST(req: NextRequest) {
   await dbConnect();
+  const { course, stage, lesson } = await req.json();
   try {
-    const { params } = await context;
-    const { id } = await params;
+    const existingActivity = await CourseActivity.findOne({ course, lesson });
+    if (existingActivity) {
+      return NextResponse.json({ message: "Activity already exists" }, { status: 200 });
+    }
     const userId = req.headers.get("x-user-id");
-
-    const newEnrollment = new Enrollment({
+    const newActivity = new CourseActivity({
       user: userId,
-      course: id,
+      course,
+      stage,
+      lesson,
     });
 
-    await newEnrollment.save();
+    await newActivity.save();
 
     // Return the response
     return NextResponse.json({ message: "Success" }, { status: 200 });

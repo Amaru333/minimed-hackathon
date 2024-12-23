@@ -30,16 +30,19 @@ export default function CoursePage({ params }: { params: { courseId: string } })
     type: "lesson" | "quiz";
     id: number | string;
   } | null>(null);
+  const [expandedStage, setExpandedStage] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchCourseData = async () => {
       try {
-        const response = await axiosInstance.get("/courses/random");
-        const course = response.data.courses.find((c: Course) => c.id === "acls-123");
+        const response = await axiosInstance.get("/courses/" + params.courseId);
+        // const course = response.data.courses.find((c: Course) => c.id === "acls-123");
+        const course = response.data;
         if (course) {
           setCourseData(course);
           setActiveStage(course.currentStage);
           setActiveItem({ type: "lesson", id: course.currentLesson });
+          setExpandedStage(`stage-${course.currentStage}`);
         }
       } catch (error) {
         console.error("Error fetching course data:", error);
@@ -48,6 +51,44 @@ export default function CoursePage({ params }: { params: { courseId: string } })
 
     fetchCourseData();
   }, [params.courseId]);
+
+  const handleNext = async () => {
+    if (!courseData || !activeStage || !activeItem) return;
+
+    const currentStage = courseData.stages.find((s) => s.id === activeStage);
+
+    if (!currentStage) return;
+
+    if (activeItem.type === "lesson") {
+      const currentLessonIndex = currentStage.lessons.findIndex((l) => l.id === activeItem.id);
+      // console.log(courseData.id, currentStage?._id, currentStage.lessons[currentLessonIndex]._id);
+      const response = await axiosInstance.post("/courses/activity", {
+        course: courseData.id,
+        stage: currentStage._id,
+        lesson: currentStage.lessons[currentLessonIndex]._id,
+      });
+      console.log(response.data);
+      if (currentLessonIndex < currentStage.lessons.length - 1) {
+        // Move to the next lesson in the current stage
+        setActiveItem({ type: "lesson", id: currentStage.lessons[currentLessonIndex + 1].id });
+      } else {
+        // Move to the quiz of the current stage
+        setActiveItem({ type: "quiz", id: currentStage.quiz.id });
+      }
+    } else if (activeItem.type === "quiz") {
+      const nextStageIndex = courseData.stages.findIndex((s) => s.id === activeStage) + 1;
+      if (nextStageIndex < courseData.stages.length) {
+        // Move to the first lesson of the next stage
+        const nextStage = courseData.stages[nextStageIndex];
+        setActiveStage(nextStage.id);
+        setActiveItem({ type: "lesson", id: nextStage.lessons[0].id });
+        setExpandedStage(`stage-${nextStage.id}`);
+      } else {
+        // User has completed the course
+        alert("Congratulations! You've completed the course.");
+      }
+    }
+  };
 
   if (!courseData) {
     return <div>Loading...</div>;
@@ -59,7 +100,13 @@ export default function CoursePage({ params }: { params: { courseId: string } })
       <div className="w-80 border-r bg-muted/10 overflow-auto">
         <div className="p-4">
           <h2 className="font-semibold mb-4">{courseData.title}</h2>
-          <Accordion type="single" collapsible className="w-full">
+          <Accordion
+            type="single"
+            collapsible
+            className="w-full"
+            value={expandedStage ?? undefined}
+            onValueChange={setExpandedStage}
+          >
             {courseData.stages.map((stage) => (
               <AccordionItem key={stage.id} value={`stage-${stage.id}`}>
                 <AccordionTrigger className="hover:no-underline">
@@ -205,10 +252,19 @@ export default function CoursePage({ params }: { params: { courseId: string } })
                   <li>Demonstrate proper medication administration techniques</li>
                 </ul>
               </div>
+              {activeItem?.type === "lesson" && (
+                <div className="mt-6">
+                  <Button onClick={handleNext}>Next</Button>
+                </div>
+              )}
             </div>
           </>
         ) : (
-          <QuizComponent quizId={activeItem?.id as string} courseId={params.courseId} />
+          <QuizComponent
+            quizId={activeItem?.id as string}
+            courseId={params.courseId}
+            onNext={handleNext}
+          />
         )}
       </div>
 

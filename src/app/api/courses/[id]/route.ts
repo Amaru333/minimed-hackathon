@@ -61,14 +61,16 @@ export async function GET(req: NextRequest, context: any) {
       skillLevel: course.skillLevel,
       duration: course.duration,
       critiqueSessions: course.critiqueSessions,
-      currentStage: 0, // Example: you can calculate this dynamically if needed
-      currentLesson: 0, // Example: you can calculate this dynamically if needed
-      stages: course.stages.map((stage: any) => ({
-        id: stage._id,
+      currentStage: 1, // Example: you can calculate this dynamically if needed
+      currentLesson: 1, // Example: you can calculate this dynamically if needed
+      stages: course.stages.map((stage: any, index: number) => ({
+        _id: stage._id,
+        id: index + 1,
         title: stage.title,
         completed: false, // Placeholder, modify based on actual completion logic
-        lessons: stage.lessons.map((lesson: any) => ({
-          id: lesson._id,
+        lessons: stage.lessons.map((lesson: any, index: number) => ({
+          _id: lesson._id,
+          id: index + 1,
           title: lesson.title,
           duration: lesson.duration,
           completed: false, // Placeholder, modify based on actual completion logic

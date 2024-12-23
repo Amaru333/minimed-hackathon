@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import {
   Card,
   CardContent,
@@ -12,13 +11,15 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Quiz } from "@/models/CourseModel";
+import axiosInstance from "@/lib/axiosInstance";
 
 interface QuizComponentProps {
   quizId: string;
   courseId: string;
+  onNext: () => void;
 }
 
-export function QuizComponent({ quizId, courseId }: QuizComponentProps) {
+export function QuizComponent({ quizId, courseId, onNext }: QuizComponentProps) {
   const [quiz, setQuiz] = useState<Quiz | null>(null);
   const [answers, setAnswers] = useState<number[]>([]);
   const [showResults, setShowResults] = useState(false);
@@ -26,8 +27,8 @@ export function QuizComponent({ quizId, courseId }: QuizComponentProps) {
   useEffect(() => {
     const fetchQuizData = async () => {
       try {
-        const response = await axios.get("/api/courses/random");
-        const course = response.data.courses.find((c: { id: string }) => c.id === "acls-123");
+        const response = await axiosInstance.get("/courses/" + courseId);
+        const course = response.data;
         if (course) {
           const quizData = course.stages.find(
             (s: { quiz: { id: string } }) => s.quiz.id === quizId
@@ -116,7 +117,10 @@ export function QuizComponent({ quizId, courseId }: QuizComponentProps) {
             ))}
           </CardContent>
           <CardFooter>
-            <Button onClick={() => setShowResults(false)}>Retake Quiz</Button>
+            <Button onClick={() => setShowResults(false)} className="mr-2">
+              Retake Quiz
+            </Button>
+            <Button onClick={onNext}>Next</Button>
           </CardFooter>
         </Card>
       </div>
