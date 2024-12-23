@@ -12,10 +12,6 @@ import Instructor from "@/models/Instructor";
 // Connect to the database
 await dbConnect();
 
-// type Context = {
-//   params: { id: string };
-// };
-
 export async function GET(req: NextRequest, context: any) {
   try {
     const { params } = await context; // Extract params from context

@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 // import Link from 'next/link'
 import { Button } from "@/components/ui/button";
@@ -15,51 +17,53 @@ import {
   Globe,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useEffect, useState } from "react";
+import { getCourseDescription } from "@/services/courseService";
 
-// This would come from your API
-const courseDetails = {
-  id: 1,
-  title: "Advanced Cardiac Life Support (ACLS)",
-  description:
-    "Master the essential skills and knowledge required for advanced cardiac life support. This comprehensive course covers everything from basic life support review to complex cardiac emergency management.",
+interface CourseDescription {
+  id: string;
+  title: string;
+  description: string;
   instructor: {
-    name: "Dr. Sarah Johnson",
-    title: "Emergency Medicine Specialist",
-    image: "https://github.com/shadcn.png",
-    courses: 12,
-    students: 3420,
-    rating: 4.9,
-  },
+    name: string;
+    title: string;
+    image: string;
+    courses: number;
+    students: number;
+    rating: number;
+  };
   stats: {
-    enrolled: 1234,
-    duration: "16 hours",
-    lectures: 24,
-    level: "Advanced",
-  },
+    enrolled: number;
+    duration: string;
+    lectures: number;
+    level: string;
+  };
   rating: {
-    average: 4.8,
-    count: 856,
-  },
-  topics: [
-    "Basic Life Support Review",
-    "ECG Interpretation",
-    "Emergency Medications",
-    "Cardiac Arrest Management",
-    "Post-Cardiac Arrest Care",
-    "Special Resuscitation Situations",
-  ],
-  features: [
-    "24/7 Course Access",
-    "Downloadable Resources",
-    "Certificate of Completion",
-    "Mobile-friendly Content",
-    "Practice Tests",
-    "Expert Support",
-  ],
-  image: "/extras/course-placeholder.png",
-};
+    average: number;
+    count: number;
+  };
+  topics: string[];
+  features: string[];
+  image: string;
+}
 
-export default function CourseDescription() {
+export default function CourseDescription({ params }: { params: { courseId: string } }) {
+  const [courseDetails, setCourseDetails] = useState<CourseDescription | null>(null);
+  useEffect(() => {
+    const fetchCourse = async () => {
+      try {
+        const data = await getCourseDescription(params.courseId); // Fetch course data
+        setCourseDetails(data); // Set the course data
+      } catch {
+        // setError(err.message || "Failed to fetch course details.");
+      } finally {
+        // setLoading(false);
+      }
+    };
+
+    fetchCourse(); // Call the API when the component loads
+  }, [params.courseId]);
+  if (!courseDetails) return <p>Loading</p>;
   return (
     <div className="container py-10 mx-auto">
       <div className="grid gap-6 lg:grid-cols-3 relative items-start">

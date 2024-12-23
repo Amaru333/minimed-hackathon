@@ -11,3 +11,13 @@ export const getCourses = async () => {
     throw error; // Handle error
   }
 };
+
+export const getCourseDescription = async (id: string) => {
+  try {
+    const response = await axiosInstance.get(`/courses/${id}/description`); // API endpoint
+    return response.data; // Return the fetched data
+  } catch (error: any) {
+    console.error("Failed to fetch course description:", error.message);
+    throw error; // Re-throw error for handling in UI
+  }
+};
