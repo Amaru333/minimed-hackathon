@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import axios from "axios";
 import {
   MoreVertical,
   Download,
@@ -22,6 +21,7 @@ import {
 } from "@/components/ui/accordion";
 import { QuizComponent } from "./QuizComponent";
 import { Course } from "@/models/CourseModel";
+import axiosInstance from "@/lib/axiosInstance";
 
 export default function CoursePage({ params }: { params: { courseId: string } }) {
   const [courseData, setCourseData] = useState<Course | null>(null);
@@ -34,7 +34,7 @@ export default function CoursePage({ params }: { params: { courseId: string } })
   useEffect(() => {
     const fetchCourseData = async () => {
       try {
-        const response = await axios.get("/api/courses/random");
+        const response = await axiosInstance.get("/courses/random");
         const course = response.data.courses.find((c: Course) => c.id === "acls-123");
         if (course) {
           setCourseData(course);

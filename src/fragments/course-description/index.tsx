@@ -19,6 +19,8 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useEffect, useState } from "react";
 import { getCourseDescription } from "@/services/courseService";
+import axiosInstance from "@/lib/axiosInstance";
+import { useRouter } from "next/navigation";
 
 interface CourseDescription {
   id: string;
@@ -48,6 +50,8 @@ interface CourseDescription {
 }
 
 export default function CourseDescription({ params }: { params: { courseId: string } }) {
+  const router = useRouter();
+
   const [courseDetails, setCourseDetails] = useState<CourseDescription | null>(null);
   useEffect(() => {
     const fetchCourse = async () => {
@@ -63,6 +67,17 @@ export default function CourseDescription({ params }: { params: { courseId: stri
 
     fetchCourse(); // Call the API when the component loads
   }, [params.courseId]);
+
+  const onEnroll = async () => {
+    try {
+      const response = await axiosInstance.post(`/courses/${params.courseId}/enroll`);
+      console.log(response.data);
+      router.push(`/course/${params.courseId}/`);
+    } catch {
+      console.error("Failed to enroll");
+    }
+  };
+
   if (!courseDetails) return <p>Loading</p>;
   return (
     <div className="container py-10 mx-auto">
@@ -141,7 +156,7 @@ export default function CourseDescription({ params }: { params: { courseId: stri
             <CardContent className="pt-6">
               <div className="text-center mb-6">
                 <div className="text-3xl font-bold mb-2">$299</div>
-                <Button size="lg" className="w-full mb-4">
+                <Button size="lg" className="w-full mb-4" onClick={onEnroll}>
                   Enroll Now
                 </Button>
                 <p className="text-sm text-muted-foreground">30-day money-back guarantee</p>
