@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
 import dbConnect from "@/lib/mongodb"; // MongoDB connection
 import Course from "@/models/Course";
@@ -12,7 +12,7 @@ import Instructor from "@/models/Instructor";
 // Connect to the database
 await dbConnect();
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     const { id } = await params; // Extract ID from URL
 
