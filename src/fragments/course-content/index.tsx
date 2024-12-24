@@ -22,8 +22,11 @@ import {
 import { QuizComponent } from "./QuizComponent";
 import { Course } from "@/models/CourseModel";
 import axiosInstance from "@/lib/axiosInstance";
+import { addCertificate } from "@/services/courseService";
+import { useRouter } from "next/navigation";
 
 export default function CoursePage({ params }: { params: { courseId: string } }) {
+  const router = useRouter();
   const [courseData, setCourseData] = useState<Course | null>(null);
   const [activeStage, setActiveStage] = useState<number | null>(null);
   const [activeItem, setActiveItem] = useState<{
@@ -100,7 +103,13 @@ export default function CoursePage({ params }: { params: { courseId: string } })
         setExpandedStage(`stage-${nextStage.id}`);
       } else {
         // User has completed the course
-        alert("Congratulations! You've completed the course.");
+        addCertificate(courseData.id)
+          .then((response) => {
+            router.push(`/certificates/${response._id}`);
+          })
+          .catch(() => {
+            console.log("Error adding certificate");
+          });
       }
     }
   };

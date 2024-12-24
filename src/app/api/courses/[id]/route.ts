@@ -111,6 +111,7 @@ export async function GET(req: NextRequest, context: any) {
         id: stage.quiz._id.toString(),
         title: stage.quiz.title,
         completed: completedQuizzes.has(stage.quiz._id.toString()),
+        quizType: stage.quiz.quizType,
         questions: stage.quiz.questions.map((question: any) => ({
           id: question._id.toString(),
           text: question.text,

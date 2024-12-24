@@ -18,6 +18,7 @@ const certificates = [
     courseId: "ACLS-2023",
     issueDate: "2023-06-15",
     expirationDate: "2025-06-15",
+    percentage: 90,
   },
   {
     id: "cert-002",
@@ -25,6 +26,7 @@ const certificates = [
     courseId: "PALS-2023",
     issueDate: "2023-07-01",
     expirationDate: "2025-07-01",
+    percentage: 95,
   },
   {
     id: "cert-003",
@@ -32,6 +34,7 @@ const certificates = [
     courseId: "ENC-2023",
     issueDate: "2023-05-20",
     expirationDate: "2026-05-20",
+    percentage: 92,
   },
 ];
 
@@ -97,6 +100,10 @@ export default function IndividualCertificate({ params }: { params: { certificat
               <h3 className="text-3xl font-bold mt-2">John Doe</h3>
               <p className="text-xl mt-2">has successfully completed the course</p>
               <h4 className="text-2xl font-bold mt-2">{certificate.name}</h4>
+              <p className="text-xl mt-2">Securing</p>
+              <div className="flex items-center justify-center mt-2">
+                <span className="text-3xl font-bold text-green-500">{certificate.percentage}%</span>
+              </div>
             </div>
 
             {/* Issue and Expiration Details */}

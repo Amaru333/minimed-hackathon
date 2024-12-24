@@ -12,6 +12,7 @@ const certificates = [
     courseId: "ACLS-2023",
     issueDate: "2023-06-15",
     expirationDate: "2025-06-15",
+    percentage: 90,
   },
   {
     id: "cert-002",
@@ -19,6 +20,7 @@ const certificates = [
     courseId: "PALS-2023",
     issueDate: "2023-07-01",
     expirationDate: "2025-07-01",
+    percentage: 95,
   },
   {
     id: "cert-003",
@@ -26,6 +28,7 @@ const certificates = [
     courseId: "ENC-2023",
     issueDate: "2023-05-20",
     expirationDate: "2026-05-20",
+    percentage: 92,
   },
 ];
 
@@ -51,6 +54,9 @@ export default function Certificates() {
                     Expires: {new Date(certificate.expirationDate).toLocaleDateString()}
                   </Badge>
                   <span className="text-sm text-muted-foreground">View Certificate</span>
+                </div>
+                <div className="mt-3 flex items-center justify-end">
+                  <span className="font-semibold text-green-500">{certificate.percentage}%</span>
                 </div>
               </CardContent>
             </Card>

@@ -5,6 +5,11 @@ import Instructor from "./Instructor";
 
 const CourseSchema = new mongoose.Schema(
   {
+    slug: {
+      type: String,
+      required: [true, "Please provide an ID"],
+      unique: true,
+    },
     title: {
       type: String,
       required: [true, "Please provide a title"],

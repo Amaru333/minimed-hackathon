@@ -21,3 +21,13 @@ export const getCourseDescription = async (id: string) => {
     throw error; // Re-throw error for handling in UI
   }
 };
+
+export const addCertificate = async (course: string) => {
+  try {
+    const response = await axiosInstance.post("/certificates", { course }); // API endpoint
+    return response.data; // Return the response
+  } catch (error: any) {
+    console.error("Failed to add certificate:", error.message);
+    throw error; // Handle error
+  }
+};
