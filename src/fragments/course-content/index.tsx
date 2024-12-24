@@ -62,13 +62,21 @@ export default function CoursePage({ params }: { params: { courseId: string } })
     if (activeItem.type === "lesson") {
       const currentLessonIndex = currentStage.lessons.findIndex((l) => l.id === activeItem.id);
       // console.log(courseData.id, currentStage?._id, currentStage.lessons[currentLessonIndex]._id);
-      const response = await axiosInstance.post("/courses/activity", {
+      await axiosInstance.post("/activity", {
         course: courseData.id,
         stage: currentStage._id,
         lesson: currentStage.lessons[currentLessonIndex]._id,
       });
-      console.log(response.data);
-      if (currentLessonIndex < currentStage.lessons.length - 1) {
+      console.log(currentLessonIndex + 1, currentStage.lessons.length, "FLAGGGGGG");
+      setCourseData((prev) => {
+        if (!prev) return prev;
+        const updatedCourse = { ...prev };
+        const updatedStage = { ...currentStage };
+        updatedStage.lessons[currentLessonIndex].completed = true;
+        updatedCourse.stages = prev.stages.map((s) => (s.id === activeStage ? updatedStage : s));
+        return updatedCourse;
+      });
+      if (currentLessonIndex + 1 < currentStage.lessons.length) {
         // Move to the next lesson in the current stage
         setActiveItem({ type: "lesson", id: currentStage.lessons[currentLessonIndex + 1].id });
       } else {

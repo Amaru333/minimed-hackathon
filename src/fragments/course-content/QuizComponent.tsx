@@ -52,7 +52,18 @@ export function QuizComponent({ quizId, courseId, onNext }: QuizComponentProps) 
     setAnswers(newAnswers);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    try {
+      await axiosInstance.post("/quiz/activity", {
+        course: courseId,
+        quiz: quiz?.id,
+        score: calculateScore(),
+        maxScore: quiz?.questions.length,
+        quizType: "quiz",
+      });
+    } catch (error) {
+      console.error("Error submitting quiz:", error);
+    }
     setShowResults(true);
   };
 
