@@ -13,6 +13,12 @@ const QuizSchema = new mongoose.Schema(
         ref: Question,
       },
     ],
+    quizType: {
+      type: String,
+      default: "quiz",
+      required: true,
+      enum: ["quiz", "assessment"],
+    },
   },
   { timestamps: true }
 );

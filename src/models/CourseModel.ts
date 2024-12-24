@@ -15,9 +15,11 @@ export interface Question {
 }
 
 export interface Quiz {
+  completed: boolean;
   id: string;
   title: string;
   questions: Question[];
+  quizType: string;
 }
 
 export interface Stage {

@@ -59,7 +59,7 @@ export function QuizComponent({ quizId, courseId, onNext }: QuizComponentProps) 
         quiz: quiz?.id,
         score: calculateScore(),
         maxScore: quiz?.questions.length,
-        quizType: "quiz",
+        quizType: quiz?.quizType,
       });
     } catch (error) {
       console.error("Error submitting quiz:", error);

@@ -67,7 +67,6 @@ export default function CoursePage({ params }: { params: { courseId: string } })
         stage: currentStage._id,
         lesson: currentStage.lessons[currentLessonIndex]._id,
       });
-      console.log(currentLessonIndex + 1, currentStage.lessons.length, "FLAGGGGGG");
       setCourseData((prev) => {
         if (!prev) return prev;
         const updatedCourse = { ...prev };
@@ -86,6 +85,14 @@ export default function CoursePage({ params }: { params: { courseId: string } })
     } else if (activeItem.type === "quiz") {
       const nextStageIndex = courseData.stages.findIndex((s) => s.id === activeStage) + 1;
       if (nextStageIndex < courseData.stages.length) {
+        setCourseData((prev) => {
+          if (!prev) return prev;
+          const updatedCourse = { ...prev };
+          const updatedStage = { ...currentStage };
+          updatedStage.quiz.completed = true;
+          updatedCourse.stages = prev.stages.map((s) => (s.id === activeStage ? updatedStage : s));
+          return updatedCourse;
+        });
         // Move to the first lesson of the next stage
         const nextStage = courseData.stages[nextStageIndex];
         setActiveStage(nextStage.id);
@@ -97,6 +104,27 @@ export default function CoursePage({ params }: { params: { courseId: string } })
       }
     }
   };
+
+  // Calculate course progress
+  const courseProgress = courseData
+    ? Math.round(
+        courseData.stages.reduce((totalProgress, stage) => {
+          // Count completed lessons
+          const completedLessons = stage.lessons.filter((lesson) => lesson.completed).length;
+          const totalLessons = stage.lessons.length;
+
+          // Count completed quiz
+          const quizCompleted = stage.quiz?.completed ? 1 : 0;
+          const totalQuizzes = 1; // Each stage has one quiz
+
+          // Calculate stage progress based on lessons and quiz
+          const stageProgress =
+            ((completedLessons + quizCompleted) / (totalLessons + totalQuizzes)) * 100;
+
+          return totalProgress + stageProgress; // Accumulate progress for all stages
+        }, 0) / courseData.stages.length // Divide by total number of stages
+      )
+    : 0;
 
   if (!courseData) {
     return <div>Loading...</div>;
@@ -280,8 +308,8 @@ export default function CoursePage({ params }: { params: { courseId: string } })
       <div className="w-80 border-l bg-muted/10 p-4 overflow-auto">
         <div className="mb-6">
           <h3 className="font-semibold mb-2">Course Progress</h3>
-          <Progress value={65} className="mb-2" />
-          <p className="text-sm text-muted-foreground">65% Complete</p>
+          <Progress value={courseProgress} className="mb-2" />
+          <p className="text-sm text-muted-foreground">{courseProgress}% Complete</p>
         </div>
 
         <div className="mb-6">

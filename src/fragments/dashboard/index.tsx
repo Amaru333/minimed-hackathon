@@ -20,6 +20,7 @@ import {
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import { getUser } from "@/redux/slices/userSlice";
+import { fetchLoginStreak } from "@/services/logService";
 
 const recentCourses = [
   {
@@ -63,6 +64,20 @@ const recommendedCourses = [
 
 export default function Dashboard() {
   const userDetails = useSelector(getUser);
+  const [streakData, setStreakData] = useState({ streak: 0, lastLogin: null });
+
+  useEffect(() => {
+    const fetchStreak = async () => {
+      try {
+        const data = await fetchLoginStreak();
+        setStreakData(data);
+      } catch (error) {
+        console.error("Error fetching login streak:", error);
+      }
+    };
+
+    fetchStreak();
+  }, []);
   // This would typically come from an API call
   const userData = {
     name: userDetails.name,
@@ -71,7 +86,7 @@ export default function Dashboard() {
       progress: 65,
       id: 10,
     },
-    streakDays: 7,
+    streakDays: streakData.streak,
     completedCourses: 3,
     totalAchievements: 12,
   };
