@@ -51,7 +51,9 @@ export function AuthNavbar() {
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="w-full text-left py-2 px-4 hover:bg-primary-200 transition-all duration-200 cursor-pointer bg-primary-300 font-medium"
-                onClick={() => {}}
+                onClick={() => {
+                  router.push("/login");
+                }}
               >
                 Logout
               </DropdownMenuItem>

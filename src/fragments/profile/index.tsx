@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -15,8 +15,19 @@ import { UserCard } from "./UserCard";
 import { useSelector } from "react-redux";
 import { getUser } from "@/redux/slices/userSlice";
 import { getMonthAndYear } from "@/lib/functions";
+import { fetchProfile } from "@/services/profileService";
 
 export default function ProfilePage() {
+  const [profileData, setProfileData] = useState({
+    averageQuizScore: 0,
+    userScore: 0,
+  });
+  useEffect(() => {
+    fetchProfile().then((data) => {
+      setProfileData(data);
+    });
+  }, []);
+  console.log(profileData, "PROFILE DATA");
   const userDetails = useSelector(getUser);
   // Mock user data
   const userData = {
@@ -53,9 +64,9 @@ export default function ProfilePage() {
         icon: "🔥",
       },
     ],
-    averageQuizScore: 85,
+    averageQuizScore: parseFloat(profileData.averageQuizScore.toFixed(2)) || 0,
     certifications: ["ACLS-001"],
-    userScore: 8.2,
+    userScore: parseFloat(profileData.userScore.toFixed(2)) || 0,
   };
   const [name, setName] = useState(userData.name);
   const [email, setEmail] = useState(userData.email);

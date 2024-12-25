@@ -1,9 +1,13 @@
+"use client";
 import Image from "next/image";
-import { QRCodeSVG } from "qrcode.react";
+const QRCodeSVG = dynamic(() => import("qrcode.react").then((mod) => mod.QRCodeSVG), {
+  ssr: false,
+});
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { GraduationCap, Award, Trophy, BarChart } from "lucide-react";
+import dynamic from "next/dynamic";
 
 interface UserCardProps {
   id: string;
@@ -39,8 +43,6 @@ export function UserCard({
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        {/* <CardTitle>{name}</CardTitle>
-        <p className="text-sm text-muted-foreground">{specialty}</p> */}
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-4">
             <Image
@@ -55,7 +57,7 @@ export function UserCard({
               <p className="text-sm text-muted-foreground">{specialty}</p>
             </div>
           </div>
-          <QRCodeSVG value={userCardUrl} size={50} />
+          <QRCodeSVG value={userCardUrl} width={50} height={50} />
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -118,9 +120,6 @@ export function UserCard({
             />
           </div>
         </div>
-        {/* <div className="flex">
-          <QRCodeSVG value={userCardUrl} size={100} />
-        </div> */}
       </CardContent>
     </Card>
   );

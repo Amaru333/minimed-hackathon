@@ -175,29 +175,6 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        {/* Quick Stats Card */}
-        {/* <Card>
-          <CardHeader>
-            <CardTitle>Your Progress</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center space-x-4">
-              <BookOpen className="h-8 w-8 text-primary" />
-              <div>
-                <div className="text-2xl font-bold">{userData.completedCourses}</div>
-                <p className="text-sm text-muted-foreground">Courses Completed</p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-4 mt-4">
-              <Award className="h-8 w-8 text-primary" />
-              <div>
-                <div className="text-2xl font-bold">{userData.totalAchievements}</div>
-                <p className="text-sm text-muted-foreground">Achievements Earned</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card> */}
-
         {/* Learning Stats Card */}
         <Card className="col-span-2">
           <CardHeader>

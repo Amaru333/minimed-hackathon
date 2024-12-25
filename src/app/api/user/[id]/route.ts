@@ -1,14 +1,19 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb"; // MongoDB connection
 
 import QuizActivity from "@/models/QuizActivity";
 import Log from "@/models/Log";
 import Certificate from "@/models/Certificate";
+import User from "@/models/User";
 
-export async function GET(req: NextRequest) {
+export async function GET(req: NextRequest, context: any) {
   await dbConnect();
   try {
-    const userId = req.headers.get("x-user-id");
+    const { params } = await context;
+    const { id } = await params;
+    const userId = id;
+    const userData = await User.findById(userId).select("-password");
     const quizActivities = await QuizActivity.find({ user: userId });
     const userCertificates = await Certificate.find({ user: userId }).countDocuments();
     const averageQuizScore =
@@ -42,7 +47,11 @@ export async function GET(req: NextRequest) {
 
     // Return the response
     return NextResponse.json(
-      { averageQuizScore, userScore: uniqueDaysScore + quizScore + certificateScore },
+      {
+        user: userData,
+        averageQuizScore,
+        userScore: uniqueDaysScore + quizScore + certificateScore,
+      },
       { status: 200 }
     );
   } catch (error) {
