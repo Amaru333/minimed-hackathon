@@ -37,5 +37,6 @@ export const config = {
     "/api/quiz/:path*",
     "/api/activity/:path*",
     "/api/certificates/:path*",
+    "/api/profile/:path*",
   ], // Match routes starting with /api/protected/
 };

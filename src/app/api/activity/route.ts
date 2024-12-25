@@ -6,11 +6,11 @@ export async function POST(req: NextRequest) {
   await dbConnect();
   const { course, stage, lesson } = await req.json();
   try {
-    const existingActivity = await CourseActivity.findOne({ course, lesson });
+    const userId = req.headers.get("x-user-id");
+    const existingActivity = await CourseActivity.findOne({ course, lesson, user: userId });
     if (existingActivity) {
       return NextResponse.json({ message: "Activity already exists" }, { status: 200 });
     }
-    const userId = req.headers.get("x-user-id");
     const newActivity = new CourseActivity({
       user: userId,
       course,

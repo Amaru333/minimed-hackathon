@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
 import Course from "@/models/Course";
