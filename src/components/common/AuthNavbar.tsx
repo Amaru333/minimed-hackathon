@@ -9,13 +9,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 export function AuthNavbar() {
   const router = useRouter();
   return (
     <div className="border-b">
       <div className="flex h-16 items-center px-4">
         <Link href="/dashboard" className="font-bold">
-          MedEd Platform
+          <Image src="/extras/logo-full.png" alt="Medverse" width={70} height={50} />
         </Link>
         <nav className="mx-6 flex items-center space-x-4 lg:space-x-6">
           <Link

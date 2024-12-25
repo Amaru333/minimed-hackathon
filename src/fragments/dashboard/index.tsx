@@ -37,7 +37,7 @@ const recentCourses = [
     instructor: "Dr. Sarah Johnson",
     duration: "6 hours",
     enrolled: 892,
-    image: "/extras/course-placeholder.png",
+    image: "/extras/course-placeholder2.png",
   },
 ];
 
@@ -49,7 +49,7 @@ const recommendedCourses = [
     students: 2156,
     duration: "10 hours",
     level: "Advanced",
-    image: "/extras/course-placeholder.png",
+    image: "/extras/course-placeholder3.png",
   },
   {
     id: 4,
@@ -58,7 +58,7 @@ const recommendedCourses = [
     students: 1879,
     duration: "12 hours",
     level: "Intermediate",
-    image: "/extras/course-placeholder.png",
+    image: "/extras/course-placeholder4.png",
   },
 ];
 

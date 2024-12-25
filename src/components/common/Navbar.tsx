@@ -1,15 +1,14 @@
 import Link from "next/link";
-import { Search } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import Image from "next/image";
 
 export function Navbar() {
   return (
     <div className="border-b">
       <div className="flex h-16 items-center px-4">
         <Link href="/" className="font-bold">
-          MedEd Platform
+          <Image src="/extras/logo-full.png" alt="Medverse" width={70} height={50} />
         </Link>
         <nav className="mx-6 flex items-center space-x-4 lg:space-x-6">
           <Link
@@ -32,10 +31,10 @@ export function Navbar() {
           </Link>
         </nav>
         <div className="ml-auto flex items-center space-x-4">
-          <div className="relative">
+          {/* <div className="relative">
             <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input type="search" placeholder="Search courses..." className="w-[200px] pl-8" />
-          </div>
+          </div> */}
           <Link href="/login">
             <Button variant="outline" size="sm">
               Login

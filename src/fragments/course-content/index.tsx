@@ -252,7 +252,7 @@ export default function CoursePage({ params }: { params: { courseId: string } })
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-6">
                 <div>
                   <div className="text-sm text-muted-foreground">Lecture Type</div>
-                  <div className="font-medium">{courseData.type}</div>
+                  <div className="font-medium capitalize">{courseData.type}</div>
                 </div>
                 <div>
                   <div className="text-sm text-muted-foreground">Skills Level</div>
