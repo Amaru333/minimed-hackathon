@@ -10,6 +10,11 @@ export async function POST(req: NextRequest, context: any) {
     const { id } = await params;
     const userId = req.headers.get("x-user-id");
 
+    const existingEnrollment = await Enrollment.findOne({ course: id, user: userId });
+    if (existingEnrollment) {
+      return NextResponse.json({ message: "Already enrolled" }, { status: 200 });
+    }
+
     const newEnrollment = new Enrollment({
       user: userId,
       course: id,

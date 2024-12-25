@@ -9,39 +9,30 @@ import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-
-// Sample certificates
-const certificates = [
-  {
-    id: "cert-001",
-    name: "Advanced Cardiac Life Support",
-    courseId: "ACLS-2023",
-    issueDate: "2023-06-15",
-    expirationDate: "2025-06-15",
-    percentage: 90,
-  },
-  {
-    id: "cert-002",
-    name: "Pediatric Advanced Life Support",
-    courseId: "PALS-2023",
-    issueDate: "2023-07-01",
-    expirationDate: "2025-07-01",
-    percentage: 95,
-  },
-  {
-    id: "cert-003",
-    name: "Emergency Nursing Certification",
-    courseId: "ENC-2023",
-    issueDate: "2023-05-20",
-    expirationDate: "2026-05-20",
-    percentage: 92,
-  },
-];
+import { fetchCertificate } from "@/services/certificateService";
 
 // Component
 export default function IndividualCertificate({ params }: { params: { certificateId: string } }) {
+  const [certificate, setCertificate] = useState({
+    _id: "",
+    user: {
+      name: "",
+    },
+    course: {
+      title: "",
+      slug: "",
+    },
+    percentage: 0,
+    issueDate: "",
+    expirationDate: "",
+  });
+  useEffect(() => {
+    fetchCertificate(params.certificateId).then((data) => {
+      setCertificate(data);
+    });
+  }, [params.certificateId]);
   const [verificationUrl, setVerificationUrl] = useState<string>("");
-  const certificate = certificates.find((cert) => cert.id === params.certificateId);
+  // const certificate = certificates.find((cert) => cert.id === params.certificateId);
 
   // Ref for capturing the certificate div
   const certificateRef = useRef<HTMLDivElement>(null);
@@ -49,9 +40,9 @@ export default function IndividualCertificate({ params }: { params: { certificat
   // Set the verification URL dynamically
   useEffect(() => {
     if (typeof window !== "undefined") {
-      setVerificationUrl(`${window.location.origin}/certificates/${certificate?.id}`);
+      setVerificationUrl(`${window.location.origin}/certificates/${certificate?._id}`);
     }
-  }, [certificate?.id]);
+  }, [certificate?._id]);
 
   // Handle Download as PDF
   const handleDownload = async () => {
@@ -71,7 +62,7 @@ export default function IndividualCertificate({ params }: { params: { certificat
     const imgHeight = (canvas.height * imgWidth) / canvas.width; // Maintain aspect ratio
 
     pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-    pdf.save(`${certificate?.name}.pdf`); // Filename
+    pdf.save(`${certificate?.course.title}-${certificate.course.slug}.pdf`); // Filename
   };
 
   // If certificate is not found
@@ -97,12 +88,14 @@ export default function IndividualCertificate({ params }: { params: { certificat
             {/* Certificate Details */}
             <div className="text-center">
               <h2 className="text-2xl font-semibold">This certifies that</h2>
-              <h3 className="text-3xl font-bold mt-2">John Doe</h3>
+              <h3 className="text-3xl font-bold mt-2">{certificate.user.name}</h3>
               <p className="text-xl mt-2">has successfully completed the course</p>
-              <h4 className="text-2xl font-bold mt-2">{certificate.name}</h4>
+              <h4 className="text-2xl font-bold mt-2">{certificate.course.title}</h4>
               <p className="text-xl mt-2">Securing</p>
               <div className="flex items-center justify-center mt-2">
-                <span className="text-3xl font-bold text-green-500">{certificate.percentage}%</span>
+                <span className="text-3xl font-bold text-green-500">
+                  {certificate.percentage.toFixed(2)}%
+                </span>
               </div>
             </div>
 
@@ -117,7 +110,7 @@ export default function IndividualCertificate({ params }: { params: { certificat
                 </p>
               </div>
               <Badge variant="secondary" className="text-lg">
-                Course ID: {certificate.courseId}
+                Course ID: {certificate.course.slug}
               </Badge>
             </div>
 

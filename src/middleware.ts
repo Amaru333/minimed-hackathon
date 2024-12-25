@@ -6,8 +6,6 @@ export async function middleware(request: NextRequest) {
   // Get the Authorization header
   const authHeader = request.headers.get("authorization");
 
-  console.log(authHeader, "AUTH HEADER");
-
   // Check if the Authorization header is missing or invalid
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });

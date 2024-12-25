@@ -81,11 +81,6 @@ export async function GET(req: NextRequest, context: any) {
 
       // Process lessons
       const lessons = stage.lessons.map((lesson: any, lessonIndex: number) => {
-        console.log(
-          completedLessons,
-          lesson._id.toString(),
-          completedLessons.has(lesson._id.toString())
-        );
         const isLessonCompleted = completedLessons.has(lesson._id.toString());
         if (!isLessonCompleted && currentStage === 0) {
           currentStage = stageIndex + 1; // Mark the current stage
@@ -130,8 +125,6 @@ export async function GET(req: NextRequest, context: any) {
         quiz,
       };
     });
-
-    console.log(currentStage, currentLesson);
 
     // Format final response
     const formattedResponse = {

@@ -11,7 +11,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: "Activity already exists" }, { status: 200 });
     }
     const userId = req.headers.get("x-user-id");
-    console.log(userId, "USERID");
     const newActivity = new QuizActivity({
       user: userId,
       course,
