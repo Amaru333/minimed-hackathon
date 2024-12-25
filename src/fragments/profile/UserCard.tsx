@@ -1,9 +1,12 @@
+import Image from "next/image";
+import { QRCodeSVG } from "qrcode.react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { GraduationCap, Award, Trophy, BarChart } from "lucide-react";
 
 interface UserCardProps {
+  id: string;
   name: string;
   specialty: string;
   coursesCompleted: number;
@@ -11,9 +14,11 @@ interface UserCardProps {
   certifications: string[];
   achievements: string[];
   userScore: number;
+  profilePicture: string;
 }
 
 export function UserCard({
+  id,
   name,
   specialty,
   coursesCompleted,
@@ -21,6 +26,7 @@ export function UserCard({
   certifications,
   achievements,
   userScore,
+  profilePicture = "https://github.com/shadcn.png",
 }: UserCardProps) {
   const getUserScoreColor = (score: number) => {
     if (score <= 3) return "bg-red-500";
@@ -28,11 +34,29 @@ export function UserCard({
     return "bg-green-500";
   };
 
+  const userCardUrl = `${typeof window !== "undefined" ? window.location.origin : ""}/user/${id}`;
+
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle>{name}</CardTitle>
-        <p className="text-sm text-muted-foreground">{specialty}</p>
+        {/* <CardTitle>{name}</CardTitle>
+        <p className="text-sm text-muted-foreground">{specialty}</p> */}
+        <div className="flex justify-between items-center">
+          <div className="flex items-center space-x-4">
+            <Image
+              src={profilePicture}
+              alt={name}
+              width={80}
+              height={80}
+              className="rounded-full"
+            />
+            <div>
+              <CardTitle>{name}</CardTitle>
+              <p className="text-sm text-muted-foreground">{specialty}</p>
+            </div>
+          </div>
+          <QRCodeSVG value={userCardUrl} size={50} />
+        </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex items-center justify-between">
@@ -94,6 +118,9 @@ export function UserCard({
             />
           </div>
         </div>
+        {/* <div className="flex">
+          <QRCodeSVG value={userCardUrl} size={100} />
+        </div> */}
       </CardContent>
     </Card>
   );

@@ -20,14 +20,15 @@ export default function ProfilePage() {
   const userDetails = useSelector(getUser);
   // Mock user data
   const userData = {
+    id: userDetails._id,
     name: userDetails.name,
     email: userDetails.email,
-    avatar: "/placeholder.svg",
+    avatar: "https://github.com/shadcn.png",
     specialty: "Emergency Medicine",
     joinDate: getMonthAndYear(userDetails.createdAt),
     bio: "Passionate about improving emergency care through continuous learning and innovation.",
     stats: {
-      coursesCompleted: 15,
+      coursesCompleted: 2,
       hoursLearned: 120,
       certificatesEarned: 8,
       quizzesPassed: 42,
@@ -39,8 +40,8 @@ export default function ProfilePage() {
     ],
     courses: [
       { id: 1, name: "Advanced Cardiac Life Support", progress: 100, certificateEarned: true },
-      { id: 2, name: "Emergency Trauma Care", progress: 75, certificateEarned: false },
-      { id: 3, name: "Pediatric Emergency Assessment", progress: 50, certificateEarned: false },
+      // { id: 2, name: "Emergency Trauma Care", progress: 75, certificateEarned: false },
+      // { id: 3, name: "Pediatric Emergency Assessment", progress: 50, certificateEarned: false },
     ],
     achievements: [
       { id: 1, name: "Fast Learner", description: "Completed 5 courses in one month", icon: "🚀" },
@@ -52,9 +53,9 @@ export default function ProfilePage() {
         icon: "🔥",
       },
     ],
-    averageQuizScore: 0,
-    certifications: ["ACLS", "PALS", "BLS"],
-    userScore: 0,
+    averageQuizScore: 85,
+    certifications: ["ACLS-001"],
+    userScore: 8.2,
   };
   const [name, setName] = useState(userData.name);
   const [email, setEmail] = useState(userData.email);
@@ -83,6 +84,7 @@ export default function ProfilePage() {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         <div className="md:col-span-2 lg:col-span-1">
           <UserCard
+            id={userData.id}
             name={userData.name}
             specialty={userData.specialty}
             coursesCompleted={userData.stats.coursesCompleted}
@@ -90,6 +92,7 @@ export default function ProfilePage() {
             certifications={userData.certifications}
             achievements={userData.achievements.map((a) => a.name)}
             userScore={userData.userScore}
+            profilePicture={userData.avatar}
           />
         </div>
 
@@ -154,7 +157,7 @@ export default function ProfilePage() {
                     <CardContent>
                       <Progress value={course.progress} className="mb-2" />
                       <div className="flex justify-between items-center">
-                        <Button variant="outline">Continue Course</Button>
+                        <Button variant="outline">View Certificate</Button>
                         {course.certificateEarned && (
                           <Badge variant="secondary" className="gap-1">
                             <GraduationCap className="h-4 w-4" />

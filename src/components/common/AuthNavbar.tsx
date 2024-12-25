@@ -25,25 +25,13 @@ export function AuthNavbar() {
             Courses
           </Link>
           <Link
-            href="/tutorials"
+            href="/certificates"
             className="text-sm font-medium transition-colors hover:text-primary"
           >
-            Tutorials
-          </Link>
-          <Link
-            href="/achievements"
-            className="text-sm font-medium transition-colors hover:text-primary"
-          >
-            Achievements
+            Certificates
           </Link>
         </nav>
         <div className="ml-auto flex items-center space-x-4">
-          {/* <Link href="/profile" className="font-bold">
-            <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-          </Link> */}
           <DropdownMenu>
             <DropdownMenuTrigger className="text-primary-100 flex items-center">
               <Avatar>
