@@ -24,7 +24,7 @@ import { fetchLoginStreak } from "@/services/logService";
 
 const recentCourses = [
   {
-    id: 1,
+    id: "6767f5920b22ad74f9c546ca",
     title: "Emergency Trauma Care",
     instructor: "Dr. Michael Chen",
     duration: "8 hours",
@@ -32,7 +32,7 @@ const recentCourses = [
     image: "/extras/course-placeholder.png",
   },
   {
-    id: 2,
+    id: "6767f5920b22ad74f9c546ca",
     title: "Pediatric Emergency Assessment",
     instructor: "Dr. Sarah Johnson",
     duration: "6 hours",
@@ -43,7 +43,7 @@ const recentCourses = [
 
 const recommendedCourses = [
   {
-    id: 3,
+    id: "6767f5920b22ad74f9c546ca",
     title: "Advanced Airway Management",
     rating: 4.8,
     students: 2156,
@@ -52,7 +52,7 @@ const recommendedCourses = [
     image: "/extras/course-placeholder3.png",
   },
   {
-    id: 4,
+    id: "6767f5920b22ad74f9c546ca",
     title: "Critical Care Pharmacology",
     rating: 4.9,
     students: 1879,
@@ -84,7 +84,7 @@ export default function Dashboard() {
     currentModule: {
       title: "Advanced Cardiac Life Support",
       progress: 65,
-      id: 10,
+      id: "6767f5920b22ad74f9c546ca",
     },
     streakDays: streakData.streak,
     completedCourses: 3,
