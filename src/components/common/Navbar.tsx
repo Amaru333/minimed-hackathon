@@ -11,7 +11,7 @@ export function Navbar() {
           <Image src="/extras/logo-full.png" alt="Medverse" width={70} height={50} />
         </Link>
         <nav className="mx-6 flex items-center space-x-4 lg:space-x-6">
-          <Link
+          {/* <Link
             href="/courses"
             className="text-sm font-medium transition-colors hover:text-primary"
           >
@@ -28,7 +28,7 @@ export function Navbar() {
             className="text-sm font-medium transition-colors hover:text-primary"
           >
             Achievements
-          </Link>
+          </Link> */}
         </nav>
         <div className="ml-auto flex items-center space-x-4">
           {/* <div className="relative">
